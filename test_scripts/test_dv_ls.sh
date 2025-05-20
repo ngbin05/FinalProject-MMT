@@ -23,7 +23,8 @@ testNum=1
 SUCCESS_MESSAGE="SUCCESS: All Routes correct!"
 FAILURE_MESSAGE="FAILURE: Not all routes are correct"
 TIMEOUT_PER_TEST=60
-WORKSPACE=~/tmp/
+WORKSPACE="$(pwd)/tmp"
+
 RESULT_FILE=test_result
 
 # testing functions
@@ -44,7 +45,7 @@ function test {
     ((numCorrect++))
   elif [[ $resultTail != $FAILURE_MESSAGE && $timeOut -eq 0 ]]; then
     printf "Fatal error: failed to parse test result message\n"
-    rm -rf $WORKSPACE
+    rm -rf "$WORKSPACE"
     exit 1
   fi
   if [ $3 -ne 0 ]; then
@@ -64,7 +65,7 @@ function testAll {
   printf "$testMessage\n"
   printf "================================================================\n"
 
-  jsonFiles=$( find $(pwd) -maxdepth 1 -name "*.json" )
+  jsonFiles=$( find "$(pwd)" -maxdepth 1 -name "*.json" )
   echo $jsonFiles
   numJsonFiles=$( echo $jsonFiles | wc -w )
   for jsonFile in $jsonFiles; do
@@ -79,8 +80,8 @@ function testAll {
 
 trap "rm -rf $WORKSPACE; exit 1" SIGINT
 
-rm -rf $WORKSPACE
-mkdir $WORKSPACE
+  rm -rf "$WORKSPACE"
+  mkdir -p "$WORKSPACE"
 
 if [ $ROUTER == "DV" ]; then
   testAll DV
@@ -94,7 +95,7 @@ else
 
 fi
 
-rm -rf $WORKSPACE
+rm -rf "$WORKSPACE"
 
 #####################################################
 # Summary Results
